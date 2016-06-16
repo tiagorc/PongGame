@@ -5,6 +5,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from random import randint
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.audio import SoundLoader
 
 
 
@@ -57,7 +58,11 @@ class PongGame(Widget):
 
 class PongApp(App):
     def build(self):
-        pass
+        sound = SoundLoader.load('resources/sound.mp3')
+        if sound:
+            print("Sound found at %s" % sound.source)
+            print("Sound is %.3f seconds" % sound.length)
+            sound.play()
 
     def set_state(self, state):
         if state == 'main_game':
