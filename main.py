@@ -7,6 +7,8 @@ from random import randint
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.audio import SoundLoader
 from kivy.event import EventDispatcher
+from kivy.uix.modalview import ModalView
+from kivy.uix.label import Label
 
 
 
@@ -32,7 +34,11 @@ class GameOverEventDispatcher(EventDispatcher):
         self.dispatch('on_game_over', value)
 
     def on_game_over(self, *args):
-        print 'entrou no dispatch do game over', args
+        # print 'entrou no dispatch do game over', args
+        view = ModalView(size_hint=(None, None), size=(600, 400))
+        label = Label(text='Game Over\nPlayer %s Ganhou!!' % (args[0]), font_size=50, halign="center", valign='middle')
+        view.add_widget(label)
+        view.open()
 
 
 class PongGame(Widget):
@@ -57,13 +63,20 @@ class PongGame(Widget):
         if self.ball.x < self.x:
             self.player2.score += 1
             self.serve_ball(vel=(4, 0))
-            if self.player2.score > 3:
-                self.game_over_callback(self.player2.score, 'Player 2 Wins!')
+            if self.player2.score > 0:
+                #self.game_over_callback receives an argument to indicate
+                #who is the winner
+                self.game_over_callback(2)
+                self.game_over()
         if self.ball.x > self.width:
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
-            if self.player1.score > 3:
-                self.game_over_callback(self.player1.score, 'Player 1 Wins!')
+            if self.player1.score > 0:
+                self.game_over_callback(1)
+                self.game_over()
+
+    def game_over(self):
+        Clock.unschedule(self.update)
 
 
     def on_touch_move(self, touch):
@@ -86,15 +99,16 @@ class PongApp(App):
         sound = SoundLoader.load('resources/sound.mp3')
         if sound:
             # print("Sound found at %s" % sound.source)
-            # print("Sound is %.3f seconds" % sound.length)
-            sound.play()
+            print("Sound is %.3f seconds" % sound.length)
+            # sound.play()
 
-    def set_state(self, state):
-        if state == 'main_game':
-            self.root.current = 'main_game'
-            game = self.root.pong_game
-            game.serve_ball()
-            Clock.schedule_interval(game.update, 1.0/60.0)
+    def set_state(self):
+        # if state == 'main_game':
+        self.root.current = 'main_game'
+        game = self.root.pong_game
+        game.serve_ball()
+        Clock.schedule_interval(game.update, 1.0/60.0)
+
 
 
 class PongPaddle(Widget):

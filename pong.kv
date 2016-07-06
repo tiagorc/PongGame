@@ -9,7 +9,6 @@ GameScreenManager:
 
 <GameScreenManager@ScreenManager>:
     pong_game: ponggame
-    state: 'main_menu'
 
     #main
     Screen:
@@ -22,7 +21,7 @@ GameScreenManager:
         Button:
             pos_hint: {'x':.075, 'y': .095}
             size_hint: (.2, .2)
-            on_release: app.set_state('main_game')
+            on_release: app.set_state()
             background_normal: 'resources/play.gif'
             background_down: 'resources/play.gif'
 
@@ -36,15 +35,6 @@ GameScreenManager:
         name: 'main_game'
         PongGame:
             id: ponggame
-
-
-    # game over
-    Screen:
-        name: 'game_over'
-
-        Button:
-            pos_hint: {'x':.075, 'y': .095}
-            on_release: app.set_state('main_menu')
 
 
 <PongBall>:
