@@ -100,7 +100,7 @@ class PongApp(App):
         if sound:
             # print("Sound found at %s" % sound.source)
             print("Sound is %.3f seconds" % sound.length)
-            # sound.play()
+            sound.play()
 
     def set_state(self):
         # if state == 'main_game':
